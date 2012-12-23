@@ -1,0 +1,229 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+
+// @import "compass/reset";
+@import "compass/css3";
+
+// Mixins
+
+@mixin image-background($path, $inline: true) {
+  @if $inline {
+    background-image: inline-image($path);
+  } @else {
+    background-image: image-url($path);
+  }
+  background-size: image-width($path) image-height($path)
+}
+
+@mixin image-size($path) {
+  width: image-width($path);
+  height: image-height($path);
+}
+
+@mixin image-element($path, $inline: true) {
+  @include image-size($path);
+  @include image-background($path, $inline);
+  text-indent: -9999px;
+}
+
+@mixin after-image($path, $padding: 10px) {
+  position: relative;
+  padding-right: $padding + image-width($path);
+
+  &:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: image-width($path);
+    height: 100%;
+    background: no-repeat right center;
+    @include image-background($path);
+  }
+}
+
+@mixin before-image($path, $padding: 10px, $top: 0, $left: 0) {
+  position: relative;
+  padding-left: $padding + image-width($path);
+
+  &:before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: $top;
+    left: $left;
+    width: image-width($path);
+    height: 100%;
+    background: no-repeat left center;
+    @include image-background($path);
+  }
+}
+
+@mixin icon-element($path) {
+  display: inline-block;
+  @include image-element($path);
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+}
+
+
+.photo-with-exif {
+  @extend .clearfix;
+  @include box-shadow(0 1px 1px rgba(0,0,0,0.15));
+  @include border-radius(0 0 3px 3px);
+
+  .photo-wrapper, img, figcaption {
+    float: left;
+  }
+
+  figcaption {
+    background-color: #fff;
+    width: 100%;
+    position: relative;
+    color: #888;
+    font-size: 14px;
+    line-height: 1.4em;
+    padding: 10px;
+    @include box-sizing(border-box);
+    @include border-radius(0 0 3px 3px);
+
+    h5, h6 {
+      display: inline;
+    }
+
+    .title a {
+      font-weight: bold;
+      text-decoration: none;
+      &:link, &:visited, &:active, &:hover {
+        color: #4a4a4a;
+      }
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    p {
+      margin-top: .5em;
+    }
+
+
+    .info-button {
+      display: block;
+      width: 18px;
+      height: 18px;
+      line-height: 18px;
+      position: absolute;
+      text-align: center;
+      text-decoration: none;
+      font-family: "Georgia";
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      top: 8px;
+      right: 8px;
+      border: 2px solid #b2b2b2;
+      @include border-radius(20px);
+      &:link, &:visited, &:hover {
+        color: #b2b2b2;
+      }
+    }
+
+  }
+
+  .photo-wrapper {
+    position: relative;
+
+    img {
+      width: 100%;
+      border: none;
+    }
+
+    .meta {
+      display: none;
+
+      position: absolute;
+      bottom: 1em;
+      right: 1em;
+      background-color: rgba(0,0,0,.75);
+      padding: 10px;
+      margin: 0;
+      font-size: 12px;
+      font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+      color: rgba(255,255,255,.9);
+      @include border-radius(3px);
+      border: 1px solid #000;
+
+      li {
+        line-height: 1.3em;
+        font-weight: bold;
+        list-style-type: none;
+      }
+      
+      .type {
+        display: inline-block;
+        width: 100px;
+        color: rgba(255,255,255,.75);
+        font-weight: normal;
+      }
+
+      @each $icon in camera, lens, focal_length, shutter_speed, aperture, iso {
+        .#{$icon} .type {
+          @include before-image("../img/icon-#{$icon}.png");
+        }
+      }
+
+    }
+
+    &.show-exif .meta {
+      display: block;
+    }
+
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    `contenteditable` attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+
+.clearfix:before,
+.clearfix:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+/*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+
+.clearfix {
+    *zoom: 1;
+}
